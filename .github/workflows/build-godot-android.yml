@@ -81,7 +81,7 @@ jobs:
           export GODOT_ANDROID_KEYSTORE_DEBUG_PATH="$HOME/.android/debug.keystore"
           export GODOT_ANDROID_KEYSTORE_DEBUG_USER="androiddebugkey"
           export GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD="android"
-          timeout 15m "$GODOT_BIN" --headless --path GodotPrototype --export-debug "Android" GodotPrototype/build/NEXUS-BattleRoyale.apk --verbose
+          timeout 15m "$GODOT_BIN" --headless --path GodotPrototype --export-debug "Android" build/NEXUS-BattleRoyale.apk --verbose
           test -s GodotPrototype/build/NEXUS-BattleRoyale.apk
 
       - name: Upload APK
