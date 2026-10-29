@@ -2,7 +2,7 @@
 
 Projeto de um Battle Royale mobile em primeira pessoa (FPS), com foco em combate competitivo, movimentação responsiva, eventos dinâmicos no mapa e otimização real de desempenho.
 
-> **Status:** fase de planejamento e prototipagem. O jogo ainda não está implementado.
+> **Status:** protótipo técnico inicial em preparação. Ainda não há APK confirmado nem versão jogável validada.
 
 ## Visão do jogo
 
@@ -32,7 +32,8 @@ O limite exato de personagens visíveis, a distância de renderização e as reg
 
 ## Roadmap inicial
 
-- [ ] Escolher e configurar o motor de jogo.
+- [x] Definir Unreal Engine 5.6 como motor do projeto.
+- [ ] Configurar e executar um ambiente de compilação na nuvem.
 - [ ] Criar a estrutura de pastas e a cena inicial.
 - [ ] Implementar a tela principal e navegação entre telas.
 - [ ] Criar o layout do perfil (dados e estatísticas serão definidos depois).
@@ -43,14 +44,19 @@ O limite exato de personagens visíveis, a distância de renderização e as reg
 - [ ] Definir arquitetura de rede para partidas de 50 jogadores.
 - [ ] Testar e otimizar em dispositivos móveis.
 
-## Próxima decisão
+## Próximas etapas
 
-Escolher o motor de jogo e a plataforma de prototipagem antes de iniciar a implementação real das cenas e dos sistemas.
+1. Validar os arquivos do projeto.
+2. Conseguir um ambiente de build compatível com Unreal 5.6 e Android.
+3. Compilar o C++ e corrigir os erros encontrados.
+4. Gerar o mapa de pré-lobby no Unreal Editor.
+5. Empacotar e testar um APK no aparelho-alvo.
 
 ## Arquivos técnicos adicionados
 
 - `Scripts/CreateNexusPreLobby.py`: script para gerar um mapa blockout do pré-lobby dentro do Unreal Editor.
 - `.github/workflows/build-android.yml`: workflow manual de empacotamento Android.
 - `Docs/Android_Build_Runner.md`: requisitos do ambiente de compilação.
+- `Docs/Cloud_Build_Plan.md`: opções e etapas para conseguir compilação na nuvem.
 
 **Atenção:** o script Python precisa ser executado dentro do Unreal Editor para criar o arquivo de mapa `.umap`. O workflow Android depende de um runner com Unreal Engine autorizada e Android SDK/NDK/JDK instalados. Ele ainda não comprova que o jogo compila nem gera APK enquanto esse runner não existir.
