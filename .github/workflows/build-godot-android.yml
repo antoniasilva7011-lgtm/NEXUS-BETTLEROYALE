@@ -29,12 +29,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          export ANDROID_HOME="/usr/local/lib/android/sdk"
+          export ANDROID_HOME="$RUNNER_TEMP/android-sdk"
           export ANDROID_SDK_ROOT="$ANDROID_HOME"
+          mkdir -p "$ANDROID_HOME/cmdline-tools"
+          curl -fL "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip" -o "$RUNNER_TEMP/cmdline-tools.zip"
+          unzip -q "$RUNNER_TEMP/cmdline-tools.zip" -d "$RUNNER_TEMP/cmdline-tools-unpacked"
+          mv "$RUNNER_TEMP/cmdline-tools-unpacked/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
           echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
           echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> "$GITHUB_ENV"
-          echo "$ANDROID_HOME/cmdline-tools/16.0/bin" >> "$GITHUB_PATH"
-          "$ANDROID_HOME/cmdline-tools/16.0/bin/sdkmanager" "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$ANDROID_HOME" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$ANDROID_HOME" "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
       - name: Download Godot and export templates
         shell: bash
