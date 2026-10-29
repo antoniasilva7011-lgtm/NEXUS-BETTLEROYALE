@@ -1,0 +1,53 @@
+name: Package NEXUS for Android
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_configuration:
+        description: "Build configuration"
+        required: true
+        default: "Development"
+        type: choice
+        options:
+          - Development
+          - Shipping
+
+# This workflow intentionally requires a prepared runner. GitHub-hosted runners
+# do not include Unreal Engine by default.
+jobs:
+  package-android:
+    runs-on: [self-hosted, unreal, android]
+    timeout-minutes: 180
+    steps:
+      - name: Checkout NEXUS
+        uses: actions/checkout@v4
+
+      - name: Validate required tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UE_ROOT:-}" || { echo "Missing UE_ROOT runner variable."; exit 2; }
+          test -x "$UE_ROOT/Engine/Build/BatchFiles/RunUAT.sh" || { echo "Unreal RunUAT.sh not found under UE_ROOT."; exit 2; }
+          test -n "${ANDROID_HOME:-}" || { echo "Missing ANDROID_HOME runner variable."; exit 2; }
+          test -n "${JAVA_HOME:-}" || { echo "Missing JAVA_HOME runner variable."; exit 2; }
+          echo "Required tool paths are present."
+
+      - name: Package Android development build
+        shell: bash
+        env:
+          BUILD_CONFIGURATION: ${{ inputs.build_configuration }}
+        run: |
+          set -euo pipefail
+          "$UE_ROOT/Engine/Build/BatchFiles/RunUAT.sh" BuildCookRun \
+            -project="$GITHUB_WORKSPACE/NEXUSBattleRoyale.uproject" \
+            -noP4 -platform=Android -clientconfig="$BUILD_CONFIGURATION" \
+            -cook -build -stage -pak -archive \
+            -archivedirectory="$GITHUB_WORKSPACE/Artifacts/Android"
+
+      - name: Upload APK output
+        uses: actions/upload-artifact@v4
+        with:
+          name: NEXUS-Android-${{ inputs.build_configuration }}
+          path: Artifacts/Android/**/*.apk
+          if-no-files-found: error
+          retention-days: 14
