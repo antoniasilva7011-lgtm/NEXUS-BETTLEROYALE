@@ -1,0 +1,16 @@
+name: Validate NEXUS project files
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  static-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Validate project structure
+        run: python3 Scripts/validate_nexus_project.py
