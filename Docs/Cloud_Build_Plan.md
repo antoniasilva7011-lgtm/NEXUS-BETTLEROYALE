@@ -16,12 +16,12 @@ Uma máquina de compilação precisa executar Unreal Engine e as ferramentas And
 
 ### Opção A — serviço gerenciado de build para Unreal
 
-O SpeedrunCI anuncia builds de Unreal na nuvem, incluindo Android e acionamento pela web: https://speedrun.ci/
+O SpeedrunCI anuncia builds na nuvem para Unreal e Android: https://speedrun.ci/ . A página pública informa teste gratuito e plano Starter a partir de US$ 99/mês para um projeto, com Android incluído. O plugin é gratuito, mas o serviço de build não é apresentado como gratuito de forma permanente. Fonte consultada em 2026-10-29: https://speedrun.ci/ e https://www.fab.com/listings/8a93b442-e39e-4ffa-94b6-cd754cd3c34a?lang=pt-br
 
-Antes de usar, é necessário confirmar no próprio serviço:
-1. Se aceita um projeto Unreal 5.6 em C++.
+Como não há orçamento autorizado, não contratar nem iniciar um plano pago. Antes de usar o teste, confirmar no próprio serviço:
+1. Se aceita este projeto Unreal 5.6 em C++.
 2. Como funciona a autorização/licença da Unreal Engine no ambiente gerenciado.
-3. Se o plano disponível permite build Android e qual é o custo.
+3. Se o teste gratuito cobre uma compilação Android completa.
 4. Como conectar o repositório e obter o APK como artefato.
 
 Não presumir que seja gratuito nem inserir credenciais da Epic, tokens privados ou chaves de assinatura no repositório.
@@ -39,6 +39,10 @@ Só é viável quando houver acesso a uma máquina compatível que possa receber
 5. Empacotar um APK Android de desenvolvimento.
 6. Instalar e testar no Samsung Galaxy S10 Lite.
 7. Só então afirmar que há um protótipo jogável.
+
+## Arquivos C++ essenciais
+
+Foram adicionados os arquivos de implementação do módulo principal e da classe de modo de jogo, que estavam ausentes no repositório. O modo de jogo aponta para o personagem de pré-lobby. Isso corrige uma lacuna estrutural, mas a compilação ainda precisa confirmar se o código é aceito pela Unreal 5.6.
 
 ## Limitações atuais
 
