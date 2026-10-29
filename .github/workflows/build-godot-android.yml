@@ -60,7 +60,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Configure SDK/JDK paths for the headless Godot editor.
           mkdir -p "$HOME/.config/godot" "$HOME/.android"
           if [ ! -f "$HOME/.android/debug.keystore" ]; then
             keytool -genkeypair -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
@@ -78,11 +77,12 @@ jobs:
           "$GODOT_BIN" --headless --editor --path GodotPrototype --quit --verbose
           "$GODOT_BIN" --headless --path GodotPrototype --import
           mkdir -p GodotPrototype/build
-          export GODOT_ANDROID_KEYSTORE_DEBUG_PATH="$HOME/.android/debug.keystore"
-          export GODOT_ANDROID_KEYSTORE_DEBUG_USER="androiddebugkey"
-          export GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD="android"
-          timeout 15m "$GODOT_BIN" --headless --path GodotPrototype --export-debug "Android" build/NEXUS-BattleRoyale.apk --verbose
+          timeout 15m "$GODOT_BIN" --headless --path GodotPrototype --export-debug "Android" build/NEXUS-BattleRoyale-unsigned.apk --verbose
+          test -s GodotPrototype/build/NEXUS-BattleRoyale-unsigned.apk
+          "$ANDROID_HOME/build-tools/34.0.0/apksigner" sign --ks "$HOME/.android/debug.keystore" --ks-key-alias androiddebugkey --ks-pass pass:android --key-pass pass:android --out GodotPrototype/build/NEXUS-BattleRoyale.apk GodotPrototype/build/NEXUS-BattleRoyale-unsigned.apk
+          "$ANDROID_HOME/build-tools/34.0.0/apksigner" verify --verbose GodotPrototype/build/NEXUS-BattleRoyale.apk
           test -s GodotPrototype/build/NEXUS-BattleRoyale.apk
+          rm GodotPrototype/build/NEXUS-BattleRoyale-unsigned.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
