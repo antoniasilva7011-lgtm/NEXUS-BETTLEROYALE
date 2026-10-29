@@ -46,3 +46,11 @@ O limite exato de personagens visíveis, a distância de renderização e as reg
 ## Próxima decisão
 
 Escolher o motor de jogo e a plataforma de prototipagem antes de iniciar a implementação real das cenas e dos sistemas.
+
+## Arquivos técnicos adicionados
+
+- `Scripts/CreateNexusPreLobby.py`: script para gerar um mapa blockout do pré-lobby dentro do Unreal Editor.
+- `.github/workflows/build-android.yml`: workflow manual de empacotamento Android.
+- `Docs/Android_Build_Runner.md`: requisitos do ambiente de compilação.
+
+**Atenção:** o script Python precisa ser executado dentro do Unreal Editor para criar o arquivo de mapa `.umap`. O workflow Android depende de um runner com Unreal Engine autorizada e Android SDK/NDK/JDK instalados. Ele ainda não comprova que o jogo compila nem gera APK enquanto esse runner não existir.
