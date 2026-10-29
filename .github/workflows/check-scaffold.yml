@@ -1,0 +1,28 @@
+name: Validate NEXUS scaffold
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate project documentation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s README.md
+          test -s Docs/PreLobby_Prototype.md
+          echo "NEXUS documentation scaffold is present."
+
+      - name: State build limitation
+        run: |
+          echo "This workflow checks repository files only."
+          echo "It does not compile Unreal Engine or produce an APK."
+          echo "Android packaging requires a runner with an authorized Unreal Engine installation and compatible Android SDK/NDK/JDK."
