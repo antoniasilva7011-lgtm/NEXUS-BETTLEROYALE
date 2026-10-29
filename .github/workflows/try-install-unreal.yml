@@ -1,0 +1,43 @@
+name: Try Unreal Engine 5.6 Setup
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check-engine-access:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check available runner disk
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Runner information:"
+          df -h /
+          AVAILABLE_GB=$(df -BG / | awk 'NR==2 {gsub("G","",$4); print $4}')
+          echo "Available disk: ${AVAILABLE_GB} GB"
+          if [ "$AVAILABLE_GB" -lt 100 ]; then
+            echo "::warning::This GitHub-hosted runner has less than 100 GB free. A full Unreal Engine source setup/build is unlikely to fit here."
+          fi
+
+      - name: Check Epic Unreal Engine source access
+        shell: bash
+        env:
+          EPIC_GITHUB_TOKEN: ${{ secrets.EPIC_GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${EPIC_GITHUB_TOKEN:-}" ]; then
+            echo "::error::Missing EPIC_GITHUB_TOKEN secret. Link your Epic Games account to GitHub, create a GitHub token with access to EpicGames/UnrealEngine, then add it to this repository as the Actions secret EPIC_GITHUB_TOKEN."
+            exit 2
+          fi
+          if git -c http.extraheader="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$EPIC_GITHUB_TOKEN" | base64 -w0)" ls-remote --heads https://github.com/EpicGames/UnrealEngine.git 'refs/heads/5.6' | grep -q .; then
+            echo "Epic source access confirmed for the 5.6 branch."
+          else
+            echo "::error::Could not access the Unreal Engine 5.6 source. Check Epic-GitHub account linking, token permissions, and branch availability."
+            exit 3
+          fi
+
+      - name: Explain next step
+        run: |
+          echo "Access check passed. This workflow does not yet install or compile Unreal Engine."
+          echo "A full source build needs a much larger persistent build machine than a typical GitHub-hosted runner.";
