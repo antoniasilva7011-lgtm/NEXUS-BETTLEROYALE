@@ -56,12 +56,14 @@ jobs:
           chmod +x "$GODOT_BIN"
           echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
 
-      - name: Validate project and export APK
+      - name: Install Android build template and export APK
         shell: bash
         run: |
           set -euo pipefail
           "$GODOT_BIN" --headless --editor --path GodotPrototype --quit
+          "$GODOT_BIN" --headless --editor --path GodotPrototype --install-android-build-template
           "$GODOT_BIN" --headless --path GodotPrototype --import
+          mkdir -p GodotPrototype/build
           "$GODOT_BIN" --headless --path GodotPrototype --export-debug "Android" GodotPrototype/build/NEXUS-BattleRoyale.apk
 
       - name: Upload APK
