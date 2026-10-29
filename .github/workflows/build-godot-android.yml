@@ -60,14 +60,26 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          "$GODOT_BIN" --headless --editor --path GodotPrototype --quit
+          # Godot does not reliably infer Android SDK/JDK paths from environment variables.
+          # Register both paths in the editor settings used by headless export.
+          mkdir -p "$HOME/.config/godot"
+          cat > "$HOME/.config/godot/editor_settings-4.tres" <<EOF
+[gd_resource type="EditorSettings" format=3]
+
+[resource]
+export/android/android_sdk_path = "$ANDROID_HOME"
+export/android/java_sdk_path = "$JAVA_HOME"
+EOF
+          echo "Android SDK: $ANDROID_HOME"
+          echo "Java SDK: $JAVA_HOME"
+          "$GODOT_BIN" --headless --editor --path GodotPrototype --quit --verbose
           TEMPLATE_ZIP="$HOME/.local/share/godot/export_templates/4.4.1.stable/android_source.zip"
           test -f "$TEMPLATE_ZIP"
           mkdir -p GodotPrototype/android/build
           unzip -q "$TEMPLATE_ZIP" -d GodotPrototype/android/build
           "$GODOT_BIN" --headless --path GodotPrototype --import
           mkdir -p GodotPrototype/build
-          timeout 15m "$GODOT_BIN" --headless --path GodotPrototype --export-debug "Android" GodotPrototype/build/NEXUS-BattleRoyale.apk
+          timeout 15m "$GODOT_BIN" --headless --path GodotPrototype --export-debug "Android" GodotPrototype/build/NEXUS-BattleRoyale.apk --verbose
           test -s GodotPrototype/build/NEXUS-BattleRoyale.apk
 
       - name: Upload APK
