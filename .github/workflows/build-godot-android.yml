@@ -63,7 +63,7 @@ jobs:
           # Godot does not reliably infer Android SDK/JDK paths from environment variables.
           # Register both paths in the editor settings used by headless export.
           mkdir -p "$HOME/.config/godot"
-          cat > "$HOME/.config/godot/editor_settings-4.tres" <<EOF
+          cat > "$HOME/.config/godot/editor_settings-4.4.tres" <<EOF
           [gd_resource type="EditorSettings" format=3]
 
           [resource]
