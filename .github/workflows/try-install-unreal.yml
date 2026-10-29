@@ -2,6 +2,10 @@ name: Try Unreal Engine 5.6 Setup
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/try-install-unreal.yml"
 
 jobs:
   check-engine-access:
@@ -40,4 +44,4 @@ jobs:
       - name: Explain next step
         run: |
           echo "Access check passed. This workflow does not yet install or compile Unreal Engine."
-          echo "A full source build needs a much larger persistent build machine than a typical GitHub-hosted runner.";
+          echo "A full source build needs a much larger persistent build machine than a typical GitHub-hosted runner."
